@@ -1,1 +1,6 @@
 tmp/
+auto-save-list/
+elpa/
+ido.last*
+*.eld
+smex-items
