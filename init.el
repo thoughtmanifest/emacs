@@ -15,6 +15,23 @@
 (add-to-list 'exec-path "/usr/local/bin")
 ;;
 
+;; add custom load path
+(add-to-list 'load-path "~/.emacs.d/thoughtmanifest/")
+(add-to-list 'custom-theme-load-path' "~/.emacs.d/thoughtmanifest/")
+;;
+
+;; shift select
+(setq shift-select-mode t)
+;;
+
+;; set default find-file (C-x C-f) directory
+(setq default-directory (concat (getenv "HOME") "/src/rk/"))
+;; end default find-file directory
+
+;; load in front
+(x-focus-frame nil)
+;;
+
 ;; list packages
 (defvar my-packages
   '(;; makes handling lisp expressions much, much easier
@@ -58,6 +75,16 @@
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
+;;
+
+;; clojure mode extra font locking
+(require 'clojure-mode-extra-font-locking)
+;;
+
+;; auto-highlight-symbol
+(require 'auto-highlight-symbol)
+(add-hook 'clojure-mode-hook #'auto-highlight-symbol-mode)
+;;(global-auto-highlight-symbol-mode t)
 ;;
 
 ;; inf-clojure
@@ -122,10 +149,13 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector
+   ["#000000" "#8b0000" "#00ff00" "#ffa500" "#7b68ee" "#dc8cc3" "#93e0e3" "#dcdccc"])
  '(custom-enabled-themes (quote (cyberpunk)))
  '(custom-safe-themes
    (quote
-    ("cdbd0a803de328a4986659d799659939d13ec01da1f482d838b68038c1bb35e8" "bcc6775934c9adf5f3bd1f428326ce0dcd34d743a92df48c128e6438b815b44f" "71ecffba18621354a1be303687f33b84788e13f40141580fa81e7840752d31bf" "7c33d91f9896614a9c28e96def4cbd818f0aa7f151d1fb5d205862e86f2a3939" default)))
+    ("727ddccc30515640c681ca1733b0664e71634ef5cee609f62c52e8c051a49b5a" "076a01f9c80b3b1f6b0092b4def01ed5fab03e973d934832dc8742739d70711d" "55db67066183c8a6d20499a5124700ee944d31d9f5f46adf5ecbbaf6e8286d36" "68c62ecb4de7af63f9a3f084525762e8178d519cb884e4f191c27c38ff89eddf" "b4895a8742988d2c2189f64d76ff213bf91a7a31e4a606661a8325509064732e" "1b2e1d8fc6f84faded0a8723784d82a193b94de90167e90034d26e6d164ace87" "33733515690b54cf4c5a839faa1f6b0b33f4979b76c6967dad39b97f9234205a" "7528c43a5627427937d253a534bd41d3200735a822782f94d0d90e57cfe7467a" "cdbd0a803de328a4986659d799659939d13ec01da1f482d838b68038c1bb35e8" "bcc6775934c9adf5f3bd1f428326ce0dcd34d743a92df48c128e6438b815b44f" "71ecffba18621354a1be303687f33b84788e13f40141580fa81e7840752d31bf" "7c33d91f9896614a9c28e96def4cbd818f0aa7f151d1fb5d205862e86f2a3939" default)))
+ '(fci-rule-color "#383838")
  '(nrepl-message-colors
    (quote
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))

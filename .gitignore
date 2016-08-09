@@ -4,3 +4,6 @@ elpa/
 ido.last*
 *.eld
 smex-items
+repl-port
+*.elc
+*~
