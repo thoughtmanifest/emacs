@@ -172,7 +172,7 @@
    `(vertical-border ((,class (:foreground ,cyberpunk-gray-5 :background ,cyberpunk-black))))
 
    ;;; font lock
-   `(font-lock-builtin-face ((,class (:foreground ,cyberpunk-blue-5))))
+   `(font-lock-builtin-face ((,class (:foreground ,cyberpunk-blue+1))))
    `(font-lock-comment-face ((,class (:foreground ,cyberpunk-gray-2 :italic t))))
    ;; `(font-lock-comment-delimiter-face ((,class (:foreground ,cyberpunk-green)))) 
    `(font-lock-constant-face ((,class (:foreground ,cyberpunk-blue-5))))

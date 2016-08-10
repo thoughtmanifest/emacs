@@ -51,6 +51,12 @@
     ;; org-mode
     org
 
+    ;; git gutter
+    git-gutter
+
+    ;; volatile highlights
+    volatile-highlights
+
     ;; allow ido usage in as many contexts as possible. see
     ;; customizations/navigation.el line 23 for a description
     ;; of ido
@@ -60,6 +66,9 @@
     ;; a filterable list of possible commands in the minibuffer
     ;; http://www.emacswiki.org/emacs/Smex
     smex
+
+    ;; exec path from shell
+    exec-path-from-shell
 
     ;; project navigation
     projectile
@@ -84,12 +93,21 @@
 ;; auto-highlight-symbol
 (require 'auto-highlight-symbol)
 (add-hook 'clojure-mode-hook #'auto-highlight-symbol-mode)
-;;(global-auto-highlight-symbol-mode t)
+(global-auto-highlight-symbol-mode t)
 ;;
 
 ;; inf-clojure
 (autoload 'inf-clojure "inf-clojure" "Run an inferior Clojure process" t)
 (add-hook 'clojure-mode-hook #'inf-clojure-minor-mode)
+;;
+
+;; git gutter
+(global-git-gutter-mode +1)
+;;
+
+;; volatile highlights
+(require 'volatile-highlights)
+(volatile-highlights-mode t)
 ;;
 
 ;; ElDoc
@@ -119,6 +137,13 @@
 (add-hook 'emacs-lisp-mode-hook '(lambda () (paredit-mode +1)))
 
 (show-paren-mode t)
+;;
+
+;; for PATH and env variables
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+(exec-path-from-shell-copy-env "AWS_ACCESS_KEY_ID")
+(exec-path-from-shell-copy-env "AWS_SECRET_KEY")
 ;;
 
 ;; ido mode 
@@ -154,7 +179,7 @@
  '(custom-enabled-themes (quote (cyberpunk)))
  '(custom-safe-themes
    (quote
-    ("727ddccc30515640c681ca1733b0664e71634ef5cee609f62c52e8c051a49b5a" "076a01f9c80b3b1f6b0092b4def01ed5fab03e973d934832dc8742739d70711d" "55db67066183c8a6d20499a5124700ee944d31d9f5f46adf5ecbbaf6e8286d36" "68c62ecb4de7af63f9a3f084525762e8178d519cb884e4f191c27c38ff89eddf" "b4895a8742988d2c2189f64d76ff213bf91a7a31e4a606661a8325509064732e" "1b2e1d8fc6f84faded0a8723784d82a193b94de90167e90034d26e6d164ace87" "33733515690b54cf4c5a839faa1f6b0b33f4979b76c6967dad39b97f9234205a" "7528c43a5627427937d253a534bd41d3200735a822782f94d0d90e57cfe7467a" "cdbd0a803de328a4986659d799659939d13ec01da1f482d838b68038c1bb35e8" "bcc6775934c9adf5f3bd1f428326ce0dcd34d743a92df48c128e6438b815b44f" "71ecffba18621354a1be303687f33b84788e13f40141580fa81e7840752d31bf" "7c33d91f9896614a9c28e96def4cbd818f0aa7f151d1fb5d205862e86f2a3939" default)))
+    ("0f3e5004f31fe101a0427c25340efe003db5b77873e174414bd1c77c6ec3c653" "e51bba638ca966d689c7616dc29518a1581a9e22491452bc8151c6f5ceb372f6" "727ddccc30515640c681ca1733b0664e71634ef5cee609f62c52e8c051a49b5a" "076a01f9c80b3b1f6b0092b4def01ed5fab03e973d934832dc8742739d70711d" "55db67066183c8a6d20499a5124700ee944d31d9f5f46adf5ecbbaf6e8286d36" "68c62ecb4de7af63f9a3f084525762e8178d519cb884e4f191c27c38ff89eddf" "b4895a8742988d2c2189f64d76ff213bf91a7a31e4a606661a8325509064732e" "1b2e1d8fc6f84faded0a8723784d82a193b94de90167e90034d26e6d164ace87" "33733515690b54cf4c5a839faa1f6b0b33f4979b76c6967dad39b97f9234205a" "7528c43a5627427937d253a534bd41d3200735a822782f94d0d90e57cfe7467a" "cdbd0a803de328a4986659d799659939d13ec01da1f482d838b68038c1bb35e8" "bcc6775934c9adf5f3bd1f428326ce0dcd34d743a92df48c128e6438b815b44f" "71ecffba18621354a1be303687f33b84788e13f40141580fa81e7840752d31bf" "7c33d91f9896614a9c28e96def4cbd818f0aa7f151d1fb5d205862e86f2a3939" default)))
  '(fci-rule-color "#383838")
  '(nrepl-message-colors
    (quote
