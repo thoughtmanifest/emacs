@@ -86,6 +86,13 @@
     (package-install p)))
 ;;
 
+;; org mode
+;; Fast vertical navigation
+(add-hook 'clojure-mode-hook #'outline-minor-mode)
+(global-set-key  (kbd "M-p") 'outline-previous-visible-heading)
+(global-set-key  (kbd "M-n") 'outline-next-visible-heading)
+;;
+
 ;; clojure mode extra font locking
 (require 'clojure-mode-extra-font-locking)
 ;;
@@ -99,6 +106,7 @@
 ;; inf-clojure
 (autoload 'inf-clojure "inf-clojure" "Run an inferior Clojure process" t)
 (add-hook 'clojure-mode-hook #'inf-clojure-minor-mode)
+(add-hook 'inf-clojure-mode-hook #'rainbow-delimiters-mode)
 ;;
 
 ;; git gutter
