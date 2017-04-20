@@ -3,7 +3,7 @@
   (require 'package)
   (add-to-list
    'package-archives
-   '("melpa" . "http://melpa.org/packages/")
+   '("melpa" . "http://stable.melpa.org/packages/")
    t)
   (package-initialize))
 ;; refresh contents if necessary
@@ -24,6 +24,10 @@
 (setq shift-select-mode t)
 ;;
 
+;; enable cua mode Copy/Cut/Paste uses C-c/C-x/C-v and enables delete-selection-mode by default
+(cua-mode t)
+;;
+
 ;; set default find-file (C-x C-f) directory
 (setq default-directory (concat (getenv "HOME") "/src/rk/"))
 ;; end default find-file directory
@@ -42,12 +46,21 @@
     ;; https://github.com/clojure-emacs/clojure-mode
     clojure-mode
 
+    scala-mode
+
     ;; extra syntax highlighting for clojure
     clojure-mode-extra-font-locking
 
-    ;; inf-clojure
+    ;; ;; inf-clojure
     inf-clojure
-        
+
+    ;; integration with a Clojure REPL
+    ;; https://github.com/clojure-emacs/cider
+    ;; cider
+
+    ;; dumb-jump https://github.com/jacktasia/dumb-jump
+    dumb-jump
+
     ;; org-mode
     org
 
@@ -79,8 +92,20 @@
     ;; edit html tags like sexps
     tagedit
 
+    ;; ensime
+    ;; http://ensime.org
+    ensime
+
     ;; git integration
-    magit))
+    magit
+
+    ;; in support of magit
+    git-commit
+
+    ;; auto-complete
+    ;; https://github.com/auto-complete/auto-complete
+    auto-complete
+    ))
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
@@ -106,12 +131,30 @@
 ;; inf-clojure
 (autoload 'inf-clojure "inf-clojure" "Run an inferior Clojure process" t)
 (add-hook 'clojure-mode-hook #'inf-clojure-minor-mode)
-(add-hook 'inf-clojure-mode-hook #'rainbow-delimiters-mode)
 ;;
 
 ;; git gutter
 (global-git-gutter-mode +1)
 ;;
+
+;; dumb-jump
+(require 'dumb-jump)
+(add-to-list 'dumb-jump-language-file-exts '(:language "clojure" :ext "cljc"))
+(add-to-list 'dumb-jump-language-file-exts '(:language "clojure" :ext "cljs"))
+
+(global-set-key (kbd "M-.") 'dumb-jump-go)
+(global-set-key (kbd "M-,") 'dumb-jump-back)
+;;
+
+;;remove all trailing whitespace and trailing blank lines before
+;;saving the file
+(defvar live-ignore-whitespace-modes '(markdown-mode))
+(defun live-cleanup-whitespace ()
+  (if (not (member major-mode live-ignore-whitespace-modes))
+      (let ((whitespace-style '(trailing empty)) )
+        (whitespace-cleanup))))
+
+(add-hook 'before-save-hook 'live-cleanup-whitespace)
 
 ;; volatile highlights
 (require 'volatile-highlights)
@@ -120,6 +163,7 @@
 
 ;; ElDoc
 (add-hook 'clojure-mode-hook #'eldoc-mode)
+;; (add-hook 'cider-repl-mode-hook #'eldoc-mode)
 (add-hook 'inf-clojure-mode-hook #'eldoc-mode)
 ;;
 
@@ -130,12 +174,14 @@
 
 ;; rainbow delimiters mode
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+;; (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
 (add-hook 'inf-clojure-mode-hook #'rainbow-delimiters-mode)
-;; 
+;;
 
 ;; paredit
 (require 'paredit)
 (add-hook 'clojure-mode-hook #'paredit-mode)
+;; (add-hook 'cider-repl-mode-hook #'paredit-mode)
 (add-hook 'inf-clojure-mode-hook #'paredit-mode)
 
 (autoload 'paredit-mode "paredit"
@@ -154,7 +200,7 @@
 (exec-path-from-shell-copy-env "AWS_SECRET_KEY")
 ;;
 
-;; ido mode 
+;; ido mode
 (ido-mode 1)
 (ido-everywhere 1)
 ;; ido-ubiquitous
@@ -177,6 +223,24 @@
 (global-set-key (kbd "C-x g") 'magit-status)
 ;;
 
+;; auto-complete
+(require 'auto-complete-config)
+(ac-config-default)
+
+;; Turn off automatic start of auto-complete
+;; (setq ac-auto-start nil)
+
+(add-hook 'auto-complete-mode-hook
+          (lambda ()
+            (local-set-key (kbd "M-/") 'auto-complete)
+            (define-key ac-completing-map (kbd "C-n") 'ac-next)
+            (define-key ac-completing-map (kbd "C-p") 'ac-previous)
+            (define-key ac-completing-map (kbd "C-g") 'ac-stop)
+            (define-key ac-completing-map (kbd "ESC") 'ac-stop)))
+
+(add-hook 'inf-clojure-mode-hook #'auto-complete-mode)
+;;
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -192,6 +256,9 @@
  '(nrepl-message-colors
    (quote
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
+ '(package-selected-packages
+   (quote
+    (auto-complete inf-clojure zerodark-theme zenburn-theme volatile-highlights undo-tree tagedit smex scala-mode rainbow-mode rainbow-delimiters projectile paredit org markdown-mode magit ido-ubiquitous hc-zenburn-theme git-gutter exec-path-from-shell dumb-jump clojure-mode-extra-font-locking cider)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(vc-annotate-background "#202020")
  '(vc-annotate-color-map
