@@ -29,7 +29,7 @@
 ;;
 
 ;; set default find-file (C-x C-f) directory
-(setq default-directory (concat (getenv "HOME") "/src/rk/"))
+(setq default-directory (concat (getenv "HOME") "/src/metis/"))
 ;; end default find-file directory
 
 ;; load in front
@@ -182,6 +182,10 @@
 (require 'paredit)
 (add-hook 'clojure-mode-hook #'paredit-mode)
 ;; (add-hook 'cider-repl-mode-hook #'paredit-mode)
+(add-hook 'inf-clojure-mode-hook
+	  '(lambda ()
+	     (define-key inf-clojure-mode-map "{" #'paredit-open-curly)
+	     (define-key inf-clojure-mode-map "}" #'paredit-close-curly)))
 (add-hook 'inf-clojure-mode-hook #'paredit-mode)
 
 (autoload 'paredit-mode "paredit"
