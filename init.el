@@ -46,12 +46,13 @@
     ;; https://github.com/clojure-emacs/clojure-mode
     clojure-mode
 
+    ;; scala-mode
     scala-mode
 
     ;; extra syntax highlighting for clojure
     clojure-mode-extra-font-locking
 
-    ;; ;; inf-clojure
+    ;; inf-clojure
     inf-clojure
 
     ;; integration with a Clojure REPL
@@ -105,11 +106,19 @@
     ;; auto-complete
     ;; https://github.com/auto-complete/auto-complete
     auto-complete
+
+    ;; elixir mode
+    elixir-mode
+
+    ;; neotree - directory visualization
+    neotree
     ))
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
 ;;
+;; linum mode
+(add-hook 'clojure-mode-hook #'linum-mode)
 
 ;; org mode
 ;; Fast vertical navigation
@@ -117,6 +126,33 @@
 (global-set-key  (kbd "M-p") 'outline-previous-visible-heading)
 (global-set-key  (kbd "M-n") 'outline-next-visible-heading)
 ;;
+
+(setq truncate-lines t)
+
+
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;;
+;; ;; inferior-lisp
+;; ;;
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; (setq inferior-lisp-program "lein trampoline run -m clojure.main")
+;; (require 'inf-lisp)
+;; (require 'clojure-mode)
+;; (require 'paredit)
+
+;; ;; Right now I only use inferior lisp for clojure, so we configure for that
+;; (define-key clojure-mode-map (kbd "C-c C-c") 'lisp-eval-defun)
+
+;; (add-hook 'inferior-lisp-mode-hook
+;;           (lambda ()
+;;             (paredit-mode t)))
+
+;; (defun comint-clear-buffer ()
+;;   (interactive)
+;;   (let ((comint-buffer-maximum-size 0))
+;;     (comint-truncate-buffer)))
+
+;; (define-key inferior-lisp-mode-map (kbd "C-c M-o") #'comint-clear-buffer)
 
 ;; clojure mode extra font locking
 (require 'clojure-mode-extra-font-locking)
@@ -131,6 +167,13 @@
 ;; inf-clojure
 (autoload 'inf-clojure "inf-clojure" "Run an inferior Clojure process" t)
 (add-hook 'clojure-mode-hook #'inf-clojure-minor-mode)
+(setq inf-clojure-lein-cmd "lein repl")
+(setq inf-clojure-log-activity t)
+;;
+
+;; cider
+;; (autoload 'cider "CIDER" "Run a CIDER process" t)
+;; (add-hook 'clojure-mode-hook #'cider-mode)
 ;;
 
 ;; git gutter
@@ -181,6 +224,10 @@
 ;; paredit
 (require 'paredit)
 (add-hook 'clojure-mode-hook #'paredit-mode)
+;; (add-hook 'cider-repl-mode-hook
+;; 	  '(lambda ()
+;; 	     (define-key cider-repl-mode-map "{" #'paredit-open-curly)
+;; 	     (define-key cider-repl-mode-map "}" #'paredit-close-curly)))
 ;; (add-hook 'cider-repl-mode-hook #'paredit-mode)
 (add-hook 'inf-clojure-mode-hook
 	  '(lambda ()
@@ -202,6 +249,17 @@
   (exec-path-from-shell-initialize))
 (exec-path-from-shell-copy-env "AWS_ACCESS_KEY_ID")
 (exec-path-from-shell-copy-env "AWS_SECRET_KEY")
+(exec-path-from-shell-copy-env "CASSANDRA_USERNAME")
+(exec-path-from-shell-copy-env "CASSANDRA_PASSWORD")
+(exec-path-from-shell-copy-env "PG_USERNAME")
+(exec-path-from-shell-copy-env "PG_PASSWORD")
+
+;;
+
+;; neotree for directory visualization
+(require 'neotree)
+(global-set-key [f8] 'neotree-toggle)
+(setq neo-autorefresh nil)
 ;;
 
 ;; ido mode
@@ -243,6 +301,7 @@
             (define-key ac-completing-map (kbd "ESC") 'ac-stop)))
 
 (add-hook 'inf-clojure-mode-hook #'auto-complete-mode)
+;; (add-hook 'cider-repl-mode-hook #'auto-complete-mode)
 ;;
 
 (custom-set-variables
@@ -262,7 +321,7 @@
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (auto-complete inf-clojure zerodark-theme zenburn-theme volatile-highlights undo-tree tagedit smex scala-mode rainbow-mode rainbow-delimiters projectile paredit org markdown-mode magit ido-ubiquitous hc-zenburn-theme git-gutter exec-path-from-shell dumb-jump clojure-mode-extra-font-locking cider)))
+    (neotree elixir-mode auto-complete inf-clojure zerodark-theme zenburn-theme volatile-highlights undo-tree tagedit smex scala-mode rainbow-mode rainbow-delimiters projectile paredit org markdown-mode magit ido-ubiquitous hc-zenburn-theme git-gutter exec-path-from-shell dumb-jump clojure-mode-extra-font-locking cider)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(vc-annotate-background "#202020")
  '(vc-annotate-color-map
