@@ -29,7 +29,7 @@
 ;;
 
 ;; set default find-file (C-x C-f) directory
-(setq default-directory (concat (getenv "HOME") "/src/metis/"))
+(setq default-directory (concat (getenv "HOME") "/src/skafos/"))
 ;; end default find-file directory
 
 ;; load in front
@@ -167,9 +167,14 @@
 ;; inf-clojure
 (autoload 'inf-clojure "inf-clojure" "Run an inferior Clojure process" t)
 (add-hook 'clojure-mode-hook #'inf-clojure-minor-mode)
-(setq inf-clojure-lein-cmd "lein repl")
+(setq inf-clojure-lein-cmd "lein dev")
 (setq inf-clojure-log-activity t)
 ;;
+
+
+;; boot
+(add-to-list 'auto-mode-alist '("\\.boot\\'" . clojure-mode))
+(add-to-list 'magic-mode-alist '(".* boot" . clojure-mode))
 
 ;; cider
 ;; (autoload 'cider "CIDER" "Run a CIDER process" t)
@@ -253,12 +258,18 @@
 (exec-path-from-shell-copy-env "CASSANDRA_PASSWORD")
 (exec-path-from-shell-copy-env "PG_USERNAME")
 (exec-path-from-shell-copy-env "PG_PASSWORD")
+(exec-path-from-shell-copy-env "NVM_DIR")
+
+;; (add-hook 'inf-clojure-mode-hook
+;; 	  '(lambda ()
+;; 	     (setenv "PG_USERNAME" (getenv "PG_USERNAME"))
+;; 	     (setenv "PG_PASSWORD" (getenv "PG_PASSWORD"))))
 
 ;;
 
 ;; neotree for directory visualization
 (require 'neotree)
-(global-set-key [f8] 'neotree-toggle)
+(global-set-key (kbd "C-`") 'neotree-toggle)
 (setq neo-autorefresh nil)
 ;;
 
