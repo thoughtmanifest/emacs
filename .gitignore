@@ -1,5 +1,6 @@
 tmp/
 auto-save-list/
+eshell/history
 ido.last*
 *.eld
 smex-items
