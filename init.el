@@ -29,7 +29,7 @@
 ;;
 
 ;; set default find-file (C-x C-f) directory
-(setq default-directory (concat (getenv "HOME") "/src/skafos/"))
+(setq default-directory (concat (getenv "HOME") "/src/adzerk/"))
 ;; end default find-file directory
 
 ;; load in front
@@ -118,7 +118,7 @@
     (package-install p)))
 ;;
 ;; linum mode
-(add-hook 'clojure-mode-hook #'linum-mode)
+;; (add-hook 'clojure-mode-hook #'linum-mode)
 
 ;; org mode
 ;; Fast vertical navigation
@@ -128,6 +128,11 @@
 ;;
 
 (setq truncate-lines t)
+
+;; Set up modifier keys on a MacOS system
+;; (when (equal system-type #'darwin)
+;;   (setq mac-command-modifier #'meta)
+;;   (setq mac-option-modifier #'super))
 
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -161,13 +166,25 @@
 ;; auto-highlight-symbol
 (require 'auto-highlight-symbol)
 (add-hook 'clojure-mode-hook #'auto-highlight-symbol-mode)
+;; this regex only differs from the default by adding `>` so that
+;; symbols like `inst->localdatetime` will be recognized as symbols
+(setf ahs-include '((clojure-mode . "^[0-9A-Za-z/_.,:;*+=&%|$#@!^?>-]+$")))
 (global-auto-highlight-symbol-mode t)
 ;;
 
 ;; inf-clojure
 (autoload 'inf-clojure "inf-clojure" "Run an inferior Clojure process" t)
 (add-hook 'clojure-mode-hook #'inf-clojure-minor-mode)
-(setq inf-clojure-lein-cmd "lein dev")
+
+;; lein cmd using alias
+;; (setq inf-clojure-lein-cmd "lein dev")
+
+;; tools.deps, using socket repl
+(setf inf-clojure-tools-deps-cmd '("localhost" . 5555))
+;; (setq inf-clojure-tools-deps-cmd "clojure")
+(setq inf-clojure-project-type "tools.deps")
+
+;; log activity
 (setq inf-clojure-log-activity t)
 ;;
 
@@ -194,15 +211,18 @@
 (global-set-key (kbd "M-,") 'dumb-jump-back)
 ;;
 
-;;remove all trailing whitespace and trailing blank lines before
+;;remove all trailing whitespace
 ;;saving the file
 (defvar live-ignore-whitespace-modes '(markdown-mode))
 (defun live-cleanup-whitespace ()
   (if (not (member major-mode live-ignore-whitespace-modes))
-      (let ((whitespace-style '(trailing empty)) )
+      (let ((whitespace-style '(trailing)))
         (whitespace-cleanup))))
 
 (add-hook 'before-save-hook 'live-cleanup-whitespace)
+
+;; enforce a newline at the end of files
+(setq require-final-newline "visit-save")
 
 ;; volatile highlights
 (require 'volatile-highlights)
@@ -290,6 +310,7 @@
 
 ;; projectile
 (projectile-global-mode)
+(setq projectile-tags-command "/usr/local/bin/ctags -Re -f \"%s\" %s")
 ;;
 
 ;; magit https://magit.vc/manual/magit/Getting-started.html#Getting-started
@@ -322,18 +343,25 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["#000000" "#8b0000" "#00ff00" "#ffa500" "#7b68ee" "#dc8cc3" "#93e0e3" "#dcdccc"])
+ '(column-number-mode t)
+ '(cua-mode t nil (cua-base))
  '(custom-enabled-themes (quote (cyberpunk)))
  '(custom-safe-themes
    (quote
     ("0f3e5004f31fe101a0427c25340efe003db5b77873e174414bd1c77c6ec3c653" "e51bba638ca966d689c7616dc29518a1581a9e22491452bc8151c6f5ceb372f6" "727ddccc30515640c681ca1733b0664e71634ef5cee609f62c52e8c051a49b5a" "076a01f9c80b3b1f6b0092b4def01ed5fab03e973d934832dc8742739d70711d" "55db67066183c8a6d20499a5124700ee944d31d9f5f46adf5ecbbaf6e8286d36" "68c62ecb4de7af63f9a3f084525762e8178d519cb884e4f191c27c38ff89eddf" "b4895a8742988d2c2189f64d76ff213bf91a7a31e4a606661a8325509064732e" "1b2e1d8fc6f84faded0a8723784d82a193b94de90167e90034d26e6d164ace87" "33733515690b54cf4c5a839faa1f6b0b33f4979b76c6967dad39b97f9234205a" "7528c43a5627427937d253a534bd41d3200735a822782f94d0d90e57cfe7467a" "cdbd0a803de328a4986659d799659939d13ec01da1f482d838b68038c1bb35e8" "bcc6775934c9adf5f3bd1f428326ce0dcd34d743a92df48c128e6438b815b44f" "71ecffba18621354a1be303687f33b84788e13f40141580fa81e7840752d31bf" "7c33d91f9896614a9c28e96def4cbd818f0aa7f151d1fb5d205862e86f2a3939" default)))
  '(fci-rule-color "#383838")
+ '(global-display-line-numbers-mode t)
  '(nrepl-message-colors
    (quote
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (neotree elixir-mode auto-complete inf-clojure zerodark-theme zenburn-theme volatile-highlights undo-tree tagedit smex scala-mode rainbow-mode rainbow-delimiters projectile paredit org markdown-mode magit ido-ubiquitous hc-zenburn-theme git-gutter exec-path-from-shell dumb-jump clojure-mode-extra-font-locking cider)))
+    (lua-mode undo-tree paredit clojure-mode inf-clojure neotree elixir-mode auto-complete zerodark-theme zenburn-theme volatile-highlights tagedit smex scala-mode rainbow-mode projectile org markdown-mode magit ido-ubiquitous hc-zenburn-theme git-gutter exec-path-from-shell dumb-jump)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
+ '(require-final-newline (quote visit-save))
+ '(shell-file-name "/bin/zsh")
+ '(show-paren-mode t)
+ '(tool-bar-mode nil)
  '(vc-annotate-background "#202020")
  '(vc-annotate-color-map
    (quote
