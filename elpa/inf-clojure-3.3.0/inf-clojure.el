@@ -522,7 +522,7 @@ sanitized command is empty."
   (let ((sanitized (string-trim-right command)))
     (if (string-blank-p sanitized)
         ""
-      )))
+      (concat sanitized "\n"))))
 
 (defun inf-clojure--send-string (proc string)
   "A custom `comint-input-sender` / `comint-send-string`.
