@@ -30,7 +30,7 @@
 ;;
 
 ;; set default find-file (C-x C-f) directory
-(setq default-directory (concat (getenv "HOME") "/src/adzerk/"))
+(setq default-directory (concat (getenv "HOME") "/src/rcrf/"))
 ;; end default find-file directory
 
 ;; load in front
