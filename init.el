@@ -1,4 +1,3 @@
-
 ;; melpa package management
 (when (>= emacs-major-version 24)
   (require 'package)
@@ -30,7 +29,7 @@
 ;;
 
 ;; set default find-file (C-x C-f) directory
-(setq default-directory (concat (getenv "HOME") "/src/rcrf/"))
+;; (setq default-directory (concat (getenv "HOME") "/src/rcrf/"))
 ;; end default find-file directory
 
 ;; load in front
@@ -64,7 +63,7 @@
     dumb-jump
 
     ;; org-mode
-    org
+    ;; org
 
     ;; git gutter
     git-gutter
@@ -109,19 +108,32 @@
 
     ;; neotree - directory visualization
     neotree
+
+    ;; cyberpunk theme
+    ;; https://github.com/n3mo/cyberpunk-theme.el
+    ;; cyberpunk-theme
     ))
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
+
+;; ;; Theme load
+;; (add-hook 'after-init-hook
+;; 	  (lambda () (load-theme 'cyberpunk t)))
+
 ;;
 ;; linum mode
 ;; (add-hook 'clojure-mode-hook #'linum-mode)
 
 ;; org mode
 ;; Fast vertical navigation
+(require 'org-tempo)
 (add-hook 'clojure-mode-hook #'outline-minor-mode)
-(global-set-key  (kbd "M-p") 'outline-previous-visible-heading)
-(global-set-key  (kbd "M-n") 'outline-next-visible-heading)
+(global-set-key  (kbd "M-p") #'outline-previous-visible-heading)
+(global-set-key  (kbd "M-n") #'outline-next-visible-heading)
+(global-set-key (kbd "C-c l") #'org-store-link)
+(global-set-key (kbd "C-c a") #'org-agenda)
+(global-set-key (kbd "C-c c") #'org-capture)
 ;;
 
 (setq truncate-lines t)
@@ -210,7 +222,7 @@
 ;; (global-display-line-numbers-mode 1)
 ;; (require 'linum)
 ;; (global-linum-mode t)
-;; (global-git-gutter-mode +1)
+(global-git-gutter-mode t)
 ;; (git-gutter:linum-setup)
 ;;
 
@@ -218,9 +230,9 @@
 (require 'dumb-jump)
 (add-to-list 'dumb-jump-language-file-exts '(:language "clojure" :ext "cljc"))
 (add-to-list 'dumb-jump-language-file-exts '(:language "clojure" :ext "cljs"))
-
-(global-set-key (kbd "M-.") 'dumb-jump-go)
-(global-set-key (kbd "M-,") 'dumb-jump-back)
+(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+(global-set-key (kbd "M-.") 'xref-find-definitions)
+(global-set-key (kbd "M-,") 'xref-pop-marker-stack)
 ;;
 
 ;;remove all trailing whitespace
@@ -354,43 +366,57 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
-   ["#000000" "#8b0000" "#00ff00" "#ffa500" "#7b68ee" "#dc8cc3" "#93e0e3" "#dcdccc"])
+   ["#000000" "#8b0000" "#00ff00" "#ffa500" "#7b68ee" "#dc8cc3" "#93e0e3"
+    "#dcdccc"])
  '(column-number-mode t)
  '(cua-mode t nil (cua-base))
  '(custom-enabled-themes '(cyberpunk))
  '(custom-safe-themes
-   '("0f3e5004f31fe101a0427c25340efe003db5b77873e174414bd1c77c6ec3c653" "e51bba638ca966d689c7616dc29518a1581a9e22491452bc8151c6f5ceb372f6" "727ddccc30515640c681ca1733b0664e71634ef5cee609f62c52e8c051a49b5a" "076a01f9c80b3b1f6b0092b4def01ed5fab03e973d934832dc8742739d70711d" "55db67066183c8a6d20499a5124700ee944d31d9f5f46adf5ecbbaf6e8286d36" "68c62ecb4de7af63f9a3f084525762e8178d519cb884e4f191c27c38ff89eddf" "b4895a8742988d2c2189f64d76ff213bf91a7a31e4a606661a8325509064732e" "1b2e1d8fc6f84faded0a8723784d82a193b94de90167e90034d26e6d164ace87" "33733515690b54cf4c5a839faa1f6b0b33f4979b76c6967dad39b97f9234205a" "7528c43a5627427937d253a534bd41d3200735a822782f94d0d90e57cfe7467a" "cdbd0a803de328a4986659d799659939d13ec01da1f482d838b68038c1bb35e8" "bcc6775934c9adf5f3bd1f428326ce0dcd34d743a92df48c128e6438b815b44f" "71ecffba18621354a1be303687f33b84788e13f40141580fa81e7840752d31bf" "7c33d91f9896614a9c28e96def4cbd818f0aa7f151d1fb5d205862e86f2a3939" default))
+   '("b9ada25c7209073ea22eda97f6338c92f4034cbeeff3575823da923915235d73"
+     "91292e98b1bf1ee79429c6d6e33cb51819931346da7842a516a3d8739d53f724"
+     "c02750472a75f15100c0826224b85e4f9237532f41b6c73f9f4f342a0ac8dcb1"
+     "8dce1641b3e5247f157d5411815e0ee6f05b58d8a8e38d1eb1488fb438085a43"
+     "571c36b70f086c01f2b370bfcf32a5249ee2f707202d8def95dc26928b2d90fc"
+     "0f3e5004f31fe101a0427c25340efe003db5b77873e174414bd1c77c6ec3c653"
+     "e51bba638ca966d689c7616dc29518a1581a9e22491452bc8151c6f5ceb372f6"
+     "727ddccc30515640c681ca1733b0664e71634ef5cee609f62c52e8c051a49b5a"
+     "076a01f9c80b3b1f6b0092b4def01ed5fab03e973d934832dc8742739d70711d"
+     "55db67066183c8a6d20499a5124700ee944d31d9f5f46adf5ecbbaf6e8286d36"
+     "68c62ecb4de7af63f9a3f084525762e8178d519cb884e4f191c27c38ff89eddf"
+     "b4895a8742988d2c2189f64d76ff213bf91a7a31e4a606661a8325509064732e"
+     "1b2e1d8fc6f84faded0a8723784d82a193b94de90167e90034d26e6d164ace87"
+     "33733515690b54cf4c5a839faa1f6b0b33f4979b76c6967dad39b97f9234205a"
+     "7528c43a5627427937d253a534bd41d3200735a822782f94d0d90e57cfe7467a"
+     "cdbd0a803de328a4986659d799659939d13ec01da1f482d838b68038c1bb35e8"
+     "bcc6775934c9adf5f3bd1f428326ce0dcd34d743a92df48c128e6438b815b44f"
+     "71ecffba18621354a1be303687f33b84788e13f40141580fa81e7840752d31bf"
+     "7c33d91f9896614a9c28e96def4cbd818f0aa7f151d1fb5d205862e86f2a3939"
+     default))
  '(fci-rule-color "#383838")
  '(global-display-line-numbers-mode t)
  '(nrepl-message-colors
-   '("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3"))
+   '("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3"
+     "#94BFF3" "#DC8CC3"))
  '(package-selected-packages
-   '(lua-mode undo-tree paredit clojure-mode neotree auto-complete zerodark-theme zenburn-theme volatile-highlights tagedit smex scala-mode rainbow-mode projectile org markdown-mode ido-ubiquitous hc-zenburn-theme exec-path-from-shell dumb-jump))
+   '(lua-mode undo-tree paredit clojure-mode neotree auto-complete
+	      zerodark-theme zenburn-theme volatile-highlights tagedit
+	      smex scala-mode rainbow-mode projectile org
+	      markdown-mode ido-ubiquitous hc-zenburn-theme
+	      exec-path-from-shell dumb-jump))
  '(pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
  '(require-final-newline 'visit-save)
+ '(safe-local-variable-directories '("/Users/davidsison/src/rcrf/unify/"))
  '(shell-file-name "/bin/zsh")
  '(show-paren-mode t)
  '(tool-bar-mode nil)
  '(vc-annotate-background "#202020")
  '(vc-annotate-color-map
-   '((20 . "#C99090")
-     (40 . "#D9A0A0")
-     (60 . "#ECBC9C")
-     (80 . "#DDCC9C")
-     (100 . "#EDDCAC")
-     (120 . "#FDECBC")
-     (140 . "#6C8C6C")
-     (160 . "#8CAC8C")
-     (180 . "#9CBF9C")
-     (200 . "#ACD2AC")
-     (220 . "#BCE5BC")
-     (240 . "#CCF8CC")
-     (260 . "#A0EDF0")
-     (280 . "#79ADB0")
-     (300 . "#89C5C8")
-     (320 . "#99DDE0")
-     (340 . "#9CC7FB")
-     (360 . "#E090C7")))
+   '((20 . "#C99090") (40 . "#D9A0A0") (60 . "#ECBC9C") (80 . "#DDCC9C")
+     (100 . "#EDDCAC") (120 . "#FDECBC") (140 . "#6C8C6C")
+     (160 . "#8CAC8C") (180 . "#9CBF9C") (200 . "#ACD2AC")
+     (220 . "#BCE5BC") (240 . "#CCF8CC") (260 . "#A0EDF0")
+     (280 . "#79ADB0") (300 . "#89C5C8") (320 . "#99DDE0")
+     (340 . "#9CC7FB") (360 . "#E090C7")))
  '(vc-annotate-very-old-color "#E090C7"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
