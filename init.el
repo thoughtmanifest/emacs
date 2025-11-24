@@ -226,11 +226,42 @@
 ;; (git-gutter:linum-setup)
 ;;
 
+(use-package ag
+  :ensure t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; eglot - LSP server integration.
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package eglot
+  :hook
+  (
+   (python-mode . eglot-ensure)		; Python
+   (js-mode . eglot-ensure)		; JavaScript
+   (typescript-mode . eglot-ensure)	; TypeScript
+   (c-mode . eglot-ensure)		; C
+   (rust-mode . eglot-ensure)		; Rust
+   (clojure-mode . eglot-ensure)	; Clojure
+   )
+  :config
+  (setq eglot-autoshutdown t) ;; Shutdown unused servers automatically
+  ;; (add-to-list 'eglot-server-programs '(python-mode . ("pyright")))
+  )
+
+;; I don't like that docstrings show up in the echo area
+(use-package eldoc-box
+  :ensure t
+  :bind
+  (:map eglot-mode-map
+	("C-h C-b" . eldoc-box-help-at-point)))
+
 ;; dumb-jump
-(require 'dumb-jump)
-(add-to-list 'dumb-jump-language-file-exts '(:language "clojure" :ext "cljc"))
-(add-to-list 'dumb-jump-language-file-exts '(:language "clojure" :ext "cljs"))
-(add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+;; (require 'dumb-jump)
+;; (add-to-list 'dumb-jump-language-file-exts '(:language "clojure" :ext "cljc"))
+;; (add-to-list 'dumb-jump-language-file-exts '(:language "clojure" :ext "cljs"))
+;; (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
 (global-set-key (kbd "M-.") 'xref-find-definitions)
 (global-set-key (kbd "M-,") 'xref-pop-marker-stack)
 ;;
@@ -398,11 +429,11 @@
    '("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3"
      "#94BFF3" "#DC8CC3"))
  '(package-selected-packages
-   '(lua-mode undo-tree paredit clojure-mode neotree auto-complete
-	      zerodark-theme zenburn-theme volatile-highlights tagedit
-	      smex scala-mode rainbow-mode projectile org
-	      markdown-mode ido-ubiquitous hc-zenburn-theme
-	      exec-path-from-shell dumb-jump))
+   '(auto-complete clojure-mode dumb-jump eldoc-box exec-path-from-shell
+		   hc-zenburn-theme ido-ubiquitous lua-mode
+		   markdown-mode neotree org paredit projectile
+		   rainbow-mode scala-mode smex tagedit undo-tree
+		   volatile-highlights zenburn-theme zerodark-theme))
  '(pdf-view-midnight-colors '("#DCDCCC" . "#383838"))
  '(require-final-newline 'visit-save)
  '(safe-local-variable-directories '("/Users/davidsison/src/rcrf/unify/"))
